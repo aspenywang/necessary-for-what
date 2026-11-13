@@ -1,0 +1,22 @@
+# Acquired data and generated artifacts
+data/
+work/
+outputs/
+results/
+models/
+
+# Credentials and local environment settings
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python bytecode, environments, and test cache
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# macOS metadata
+.DS_Store
