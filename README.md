@@ -42,9 +42,9 @@ python -m survey_audit.prepare_data --dataset {pew|issp} --output {respondents} 
 - `--output`: respondent JSONL
 - `--instrument-out`: instrument JSON
 - `--identifiers`: optional source-to-analysis ID JSON mapping; omit it to keep public Pew `QKEY` identifiers
-- `--folds`: a complete analysis-ID-to-fold JSON mapping, or the Pew `QKEY,fold` CSV below; CSV lookup uses the original `QKEY` even when `--identifiers` is supplied
+- `--folds`: a complete analysis-ID-to-fold JSON mapping, or the Pew `QKEY,fold,in_analysis_sample` CSV below; CSV lookup uses the original `QKEY` even when `--identifiers` is supplied
 
-`data_splits/pew_w54_analysis_sample.csv` restores the saved folds for all 1,000 analysis respondents. It contains only public `QKEY` identifiers and fold numbers 0–4. The remaining 5,088 eligible reference-training respondents retain the default deterministic folds; this file does not restore the historical full-panel training partition. A complete local `--folds` JSON mapping can restore that partition.
+`data_splits/pew_w54_analysis_sample.csv` restores the saved outer-fold assignments for all 6,088 eligible Pew respondents and the frozen analysis sample. Its columns are public `QKEY`, `fold` (0–4), and `in_analysis_sample` (1 for the 1,000 analysis respondents; 0 for the other 5,088). Passing it through `--folds` restores both the fold and analysis-sample membership for every respondent.
 
 Example usage:
 
@@ -170,7 +170,7 @@ Fits a survey-weighted, L2-regularized multinomial logistic regression for each 
 python -m survey_audit.fit_reference --jobs {full-panel-jobs} --conditions {conditions} --output {predictions} --audit {fit-record}
 ```
 
-- `--jobs`: jobs built with `--full-panel`, so the reference trains on the full eligible panel
+- `--jobs`: jobs built with `--full-panel`; each target trains on all eligible respondents with an observed answer outside the held-out fold, including respondents outside the analysis sample. For Pew, prepare all 6,088 respondents with the saved split CSV; predictions are written only for the 1,000 analysis respondents.
 - `--conditions`: fitted conditions (default `History Own`); the example also fits `Shuffled`
 - `--transfer-shuffled`: apply the `Own` fit to `Shuffled` inputs using `--conditions History Own`; jobs must contain `Shuffled`, and transfer predictions go in a separate output file
 - `--penalties`: reuse penalties from a previous fit record; `--audit` writes the required new fit record

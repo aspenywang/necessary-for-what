@@ -55,27 +55,28 @@ def normalize_scalar(value):
 
 
 def assign_folds(rows, dataset, supplied=None):
-    """Restore saved folds from a full JSON mapping or Pew analysis CSV."""
+    """Restore saved folds and Pew sample membership from a full-panel CSV."""
     if supplied and Path(supplied).suffix.lower() == '.csv':
         if dataset != 'pew':
             raise ValueError('QKEY fold CSV files apply to Pew only')
         with Path(supplied).open(encoding='utf-8', newline='') as stream:
             reader = csv.DictReader(stream)
-            if reader.fieldnames != ['QKEY', 'fold']:
-                raise ValueError('Pew fold CSV requires exactly QKEY,fold columns')
+            if reader.fieldnames != ['QKEY', 'fold', 'in_analysis_sample']:
+                raise ValueError('Pew fold CSV requires QKEY,fold,in_analysis_sample columns')
             saved = list(reader)
-        mapping = {normalize_scalar(row['QKEY']): int(row['fold']) for row in saved}
-        if len(mapping) != len(saved) or any(fold not in range(5) for fold in mapping.values()):
+        mapping = {normalize_scalar(row['QKEY']):
+                   (int(row['fold']), int(row['in_analysis_sample'])) for row in saved}
+        if len(mapping) != len(saved) or any(fold not in range(5) for fold, _ in mapping.values()):
             raise ValueError('Pew fold CSV requires unique QKEYs and folds 0 through 4')
-        expected = {str(row.get('source_respondent_id', row['respondent_id']))
-                    for row in rows if row.get('evaluation_cohort', True)}
+        if any(member not in (0, 1) for _, member in mapping.values()):
+            raise ValueError('in_analysis_sample must be 0 or 1')
+        expected = {str(row.get('source_respondent_id', row['respondent_id'])) for row in rows}
         if set(mapping) != expected:
-            raise ValueError('Pew fold CSV must match the complete analysis cohort')
-        assign_folds(rows, dataset)
+            raise ValueError('Pew fold CSV must match the complete eligible panel')
         for row in rows:
             identifier = str(row.get('source_respondent_id', row['respondent_id']))
-            if identifier in mapping:
-                row['fold'] = mapping[identifier]
+            row['fold'], member = mapping[identifier]
+            row['evaluation_cohort'] = bool(member)
         return rows
     if supplied:
         mapping = json.loads(Path(supplied).read_text())
@@ -213,7 +214,7 @@ def main():
     parser.add_argument('--info', type=Path, help='OpinionQA Wave 54 info.csv')
     parser.add_argument('--archive', type=Path, help='ISSP ZA10010 v1.0.0 Stata ZIP')
     parser.add_argument('--questionnaire', type=Path, help='ISSP U.S. English questionnaire PDF')
-    parser.add_argument('--folds', type=Path, help='Full ID-to-fold JSON mapping or Pew analysis QKEY,fold CSV')
+    parser.add_argument('--folds', type=Path, help='Full ID-to-fold JSON mapping or Pew QKEY,fold,in_analysis_sample CSV')
     parser.add_argument('--identifiers', type=Path, help='Optional source ID to original analysis ID mapping')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instrument-out', type=Path, required=True)
