@@ -1,4 +1,6 @@
 # Necessary for What? Auditing Demographic Disclosure to LLM Synthetic Respondents
+[![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ![Study overview: fixed answer histories, varied profile inputs, and evaluation against observed answers](misc/study_overview.png)
 
@@ -24,7 +26,7 @@ ISSP records are restricted. Keep them and anything derived from them local, and
 # ⬇️ Install
 
 ```bash
-python -m pip install -r requirements.txt   # Python 3.10
+python -m pip install -r requirements.txt
 ```
 
 # 🤩 Using the code
@@ -221,4 +223,17 @@ Example usage:
 ```bash
 python -m survey_audit.analyze_contrasts --predictions work/qwen_pew.jsonl work/reference_pew.jsonl \
   --universe prompted --grouping both --output-dir work/contrasts
+```
+# 📄 Citation
+
+```bibtex
+@misc{wang2026necessary,
+  title         = {Necessary for What? Auditing Demographic Disclosure to LLM Synthetic Respondents},
+  author        = {Wang, Aspen and Yen, Yu Shan and Ku, Lun-Wei},
+  year          = {2026},
+  eprint        = {XXXX.XXXXX},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CY},
+  doi           = {10.48550/arXiv.XXXX.XXXXX}
+}
 ```
