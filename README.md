@@ -1,4 +1,7 @@
 # Necessary for What? Auditing Demographic Disclosure to LLM Synthetic Respondents
+
+[![arXiv](https://img.shields.io/badge/arXiv-2611.20606-b31b1b.svg)](https://arxiv.org/abs/2611.20606)
+[![DOI](https://img.shields.io/badge/DOI-10.48550%2FarXiv.2611.20606-blue.svg)](https://doi.org/10.48550/arXiv.2611.20606)
 [![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -6,10 +9,11 @@
 
 This repository contains the research code for "Necessary for What? Auditing Demographic Disclosure to LLM Synthetic Respondents" by Aspen Wang, Yen Yu Shan, and Lun-Wei Ku (Institute of Information Science, Academia Sinica).
 
-Paper: arXiv link will be added after announcement.
+Paper: https://arxiv.org/abs/2611.20606
 
 # 📢 Announcements
 
+- **2026/11** Paper released on [arXiv](https://arxiv.org/abs/2611.20606).
 - **2026/11** Research code. Data are not included, see 💿 below.
 
 # 💿 Getting the data
@@ -224,6 +228,7 @@ Example usage:
 python -m survey_audit.analyze_contrasts --predictions work/qwen_pew.jsonl work/reference_pew.jsonl \
   --universe prompted --grouping both --output-dir work/contrasts
 ```
+
 # 📄 Citation
 
 ```bibtex
@@ -231,9 +236,9 @@ python -m survey_audit.analyze_contrasts --predictions work/qwen_pew.jsonl work/
   title         = {Necessary for What? Auditing Demographic Disclosure to LLM Synthetic Respondents},
   author        = {Wang, Aspen and Yen, Yu Shan and Ku, Lun-Wei},
   year          = {2026},
-  eprint        = {XXXX.XXXXX},
+  eprint        = {2611.20606},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CY},
-  doi           = {10.48550/arXiv.XXXX.XXXXX}
+  doi           = {10.48550/arXiv.2611.20606}
 }
 ```
